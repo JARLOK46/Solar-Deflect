@@ -6,6 +6,8 @@ public sealed class DetectionLoop
     private static readonly TimeSpan RetentionWait = TimeSpan.FromMilliseconds(450);
     private const int RetentionExtraTolerance = 30;
 
+    public event EventHandler? ClickDetected;
+
     public async Task RunAsync(DetectionSettings settings, IDetectionRuntime runtime, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(settings);
@@ -43,6 +45,7 @@ public sealed class DetectionLoop
                     continue;
 
                 runtime.LeftClick();
+                ClickDetected?.Invoke(this, EventArgs.Empty);
                 await WaitForTargetReleaseAsync(settings, runtime, point, target, cancellationToken);
                 await Task.Delay(settings.Cooldown, cancellationToken);
             }

@@ -4,6 +4,7 @@ using System.Windows.Media;
 using System.Windows.Input;
 using TriggerBot.App.ViewModels;
 using TriggerBot.Core.Detection;
+using TriggerBot.Core.SpeedTesting;
 using TriggerBot.Windows.Input;
 
 namespace TriggerBot.App;
@@ -15,6 +16,7 @@ public partial class MainWindow : Window
     private readonly DetectionLoop _detectionLoop = new();
     private readonly WindowsDetectionRuntime _detectionRuntime = new();
     private CancellationTokenSource? _detectionCancellation;
+    private CancellationTokenSource? _speedTestCancellation;
     private bool _awaitingColorSelection;
     private bool _awaitingPositionSelection;
     private bool _initializingSettings;
@@ -47,6 +49,8 @@ public partial class MainWindow : Window
     {
         _detectionCancellation?.Cancel();
         _detectionCancellation?.Dispose();
+        _speedTestCancellation?.Cancel();
+        _speedTestCancellation?.Dispose();
         _hotkeys.Pressed -= Hotkeys_Pressed;
         _hotkeys.Dispose();
     }
@@ -116,6 +120,60 @@ public partial class MainWindow : Window
             InitializeSettingsDisplay();
         }
     }
+
+    private async void RunSpeedTest_Click(object sender, RoutedEventArgs e)
+    {
+        if (_viewModel.IsArmed)
+        {
+            _viewModel.SetStatus("Stop the detector before running a speed test.");
+            return;
+        }
+        if (_speedTestCancellation is not null) return;
+
+        var testWindow = new SpeedTestWindow();
+        testWindow.Show();
+        var point = testWindow.DetectionPoint;
+        var settings = _viewModel.Settings with
+        {
+            TargetColor = new RgbColor(179, 0, 0),
+            LockedPosition = point,
+            PositionLockEnabled = true
+        };
+        var cancellation = new CancellationTokenSource();
+        _speedTestCancellation = cancellation;
+        var detectionTask = _detectionLoop.RunAsync(settings, _detectionRuntime, cancellation.Token);
+
+        try
+        {
+            var statistics = await new SpeedTestRunner().RunAsync(
+                10,
+                (trial, token) => testWindow.MeasureTrialAsync(trial, _detectionLoop, token),
+                cancellation.Token);
+
+            BestValue.Text = FormatMilliseconds(statistics.Best);
+            AverageValue.Text = FormatMilliseconds(statistics.Average);
+            DeviationValue.Text = FormatMilliseconds(statistics.StandardDeviation);
+            _viewModel.SetStatus("Speed test complete · 10 trials recorded");
+        }
+        catch (TimeoutException exception)
+        {
+            _viewModel.SetStatus(exception.Message);
+        }
+        catch (OperationCanceledException)
+        {
+            _viewModel.SetStatus("Speed test cancelled");
+        }
+        finally
+        {
+            cancellation.Cancel();
+            await detectionTask;
+            testWindow.Close();
+            _speedTestCancellation = null;
+            cancellation.Dispose();
+        }
+    }
+
+    private static string FormatMilliseconds(TimeSpan value) => $"{value.TotalMilliseconds:0.0} ms";
 
     private void Navigation_Click(object sender, RoutedEventArgs e)
     {
