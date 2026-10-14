@@ -1,7 +1,10 @@
+using System.Text.Json.Serialization;
+
 namespace TriggerBot.Core.Detection;
 
 public readonly record struct RgbColor
 {
+    [JsonConstructor]
     public RgbColor(byte red, byte green, byte blue)
     {
         Red = red;

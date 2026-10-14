@@ -15,11 +15,14 @@ public partial class MainWindow : Window
     private readonly DetectionLoop _detectionLoop = new();
     private readonly WindowsDetectionRuntime _detectionRuntime = new();
     private CancellationTokenSource? _detectionCancellation;
+    private bool _awaitingColorSelection;
+    private bool _awaitingPositionSelection;
 
     public MainWindow()
     {
         InitializeComponent();
         DataContext = _viewModel;
+        RefreshCaptureDisplay();
         SourceInitialized += MainWindow_SourceInitialized;
         Closed += MainWindow_Closed;
         _hotkeys.Pressed += Hotkeys_Pressed;
@@ -54,10 +57,12 @@ public partial class MainWindow : Window
                 ToggleTrigger_Click(this, new RoutedEventArgs());
                 break;
             case TriggerHotkey.SelectColor:
-                SelectColor_Click(this, new RoutedEventArgs());
+                if (_awaitingColorSelection) CaptureTargetColor();
+                else SelectColor_Click(this, new RoutedEventArgs());
                 break;
             case TriggerHotkey.FixPosition:
-                FixPosition_Click(this, new RoutedEventArgs());
+                if (_awaitingPositionSelection) CaptureFixedPosition();
+                else FixPosition_Click(this, new RoutedEventArgs());
                 break;
         }
     }
@@ -142,16 +147,67 @@ public partial class MainWindow : Window
 
     private void SelectColor_Click(object sender, RoutedEventArgs e)
     {
-        _viewModel.SetStatus("Color selection armed · press F6 over the target pixel");
+        _awaitingColorSelection = true;
+        _awaitingPositionSelection = false;
+        _viewModel.SetStatus("Color selection armed · move the cursor and press F6");
         ColorStatus.Text = "Waiting for F6";
         ColorStatus.Foreground = (Brush)FindResource("WarningBrush");
     }
 
+    private void CaptureTargetColor()
+    {
+        try
+        {
+            var point = _detectionRuntime.GetCursorPosition();
+            var color = _detectionRuntime.ReadPixel(point);
+            _viewModel.SetTargetColor(color);
+            _awaitingColorSelection = false;
+            TargetColorValue.Text = _viewModel.TargetColorLabel;
+            ColorStatus.Text = $"Captured at ({point.X}, {point.Y})";
+            ColorStatus.Foreground = (Brush)FindResource("AccentBrush");
+        }
+        catch (Exception exception)
+        {
+            _viewModel.SetStatus($"Color capture failed: {exception.Message}");
+            ColorStatus.Text = "Capture failed";
+            ColorStatus.Foreground = (Brush)FindResource("DangerBrush");
+        }
+    }
+
     private void FixPosition_Click(object sender, RoutedEventArgs e)
     {
-        _viewModel.SetStatus("Position captured · (959, 571)");
-        PositionValue.Text = "(959, 571)";
-        PositionStatus.Text = "Fixed position ready";
+        _awaitingPositionSelection = true;
+        _awaitingColorSelection = false;
+        _viewModel.SetStatus("Position selection armed · move the cursor and press F7");
+        PositionStatus.Text = "Waiting for F7";
+    }
+
+    private void RefreshCaptureDisplay()
+    {
+        TargetColorValue.Text = _viewModel.TargetColorLabel;
+        ColorStatus.Text = _viewModel.TargetColorStatus;
+        if (_viewModel.Settings.LockedPosition is { } point)
+        {
+            PositionValue.Text = $"({point.X}, {point.Y})";
+            PositionStatus.Text = "Fixed position ready";
+        }
+    }
+
+    private void CaptureFixedPosition()
+    {
+        try
+        {
+            var point = _detectionRuntime.GetCursorPosition();
+            _viewModel.SetLockedPosition(point);
+            _awaitingPositionSelection = false;
+            PositionValue.Text = $"({point.X}, {point.Y})";
+            PositionStatus.Text = "Fixed position ready";
+        }
+        catch (Exception exception)
+        {
+            _viewModel.SetStatus($"Position capture failed: {exception.Message}");
+            PositionStatus.Text = "Capture failed";
+        }
     }
 
     private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
