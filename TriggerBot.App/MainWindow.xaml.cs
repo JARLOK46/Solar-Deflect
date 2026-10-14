@@ -17,12 +17,14 @@ public partial class MainWindow : Window
     private CancellationTokenSource? _detectionCancellation;
     private bool _awaitingColorSelection;
     private bool _awaitingPositionSelection;
+    private bool _initializingSettings;
 
     public MainWindow()
     {
         InitializeComponent();
         DataContext = _viewModel;
         RefreshCaptureDisplay();
+        InitializeSettingsDisplay();
         SourceInitialized += MainWindow_SourceInitialized;
         Closed += MainWindow_Closed;
         _hotkeys.Pressed += Hotkeys_Pressed;
@@ -64,6 +66,54 @@ public partial class MainWindow : Window
                 if (_awaitingPositionSelection) CaptureFixedPosition();
                 else FixPosition_Click(this, new RoutedEventArgs());
                 break;
+        }
+    }
+
+    private void InitializeSettingsDisplay()
+    {
+        _initializingSettings = true;
+        ToleranceSlider.Value = _viewModel.Tolerance;
+        ClickDelaySlider.Value = _viewModel.ClickDelay.TotalSeconds;
+        CooldownSlider.Value = _viewModel.Cooldown.TotalSeconds;
+        PositionLockCheckBox.IsChecked = _viewModel.PositionLockEnabled;
+        _initializingSettings = false;
+    }
+
+    private void Settings_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (_initializingSettings) return;
+
+        var settings = _viewModel.Settings with
+        {
+            Tolerance = (int)Math.Round(ToleranceSlider.Value),
+            ClickDelay = TimeSpan.FromSeconds(ClickDelaySlider.Value),
+            Cooldown = TimeSpan.FromSeconds(CooldownSlider.Value)
+        };
+
+        try
+        {
+            _viewModel.UpdateSettings(settings);
+        }
+        catch (Exception exception) when (exception is InvalidOperationException or ArgumentOutOfRangeException)
+        {
+            _viewModel.SetStatus(exception.Message);
+            InitializeSettingsDisplay();
+        }
+    }
+
+    private void PositionLock_Changed(object sender, RoutedEventArgs e)
+    {
+        if (_initializingSettings || PositionLockCheckBox.IsChecked is not bool enabled) return;
+
+        try
+        {
+            _viewModel.UpdateSettings(_viewModel.Settings with { PositionLockEnabled = enabled });
+            PositionStatus.Text = enabled ? "Locked position active" : "Follows cursor";
+        }
+        catch (Exception exception) when (exception is InvalidOperationException or ArgumentOutOfRangeException)
+        {
+            _viewModel.SetStatus(exception.Message);
+            InitializeSettingsDisplay();
         }
     }
 
