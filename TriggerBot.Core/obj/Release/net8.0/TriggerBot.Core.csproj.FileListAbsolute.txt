@@ -1,9 +1,0 @@
-C:\programacion\07-Videojuegos-y-Herramientas\Solar-Deflect\TriggerBot.Core\bin\Release\net8.0\TriggerBot.Core.deps.json
-C:\programacion\07-Videojuegos-y-Herramientas\Solar-Deflect\TriggerBot.Core\bin\Release\net8.0\TriggerBot.Core.dll
-C:\programacion\07-Videojuegos-y-Herramientas\Solar-Deflect\TriggerBot.Core\obj\Release\net8.0\TriggerBot.Core.GeneratedMSBuildEditorConfig.editorconfig
-C:\programacion\07-Videojuegos-y-Herramientas\Solar-Deflect\TriggerBot.Core\obj\Release\net8.0\TriggerBot.Core.AssemblyInfoInputs.cache
-C:\programacion\07-Videojuegos-y-Herramientas\Solar-Deflect\TriggerBot.Core\obj\Release\net8.0\TriggerBot.Core.AssemblyInfo.cs
-C:\programacion\07-Videojuegos-y-Herramientas\Solar-Deflect\TriggerBot.Core\obj\Release\net8.0\TriggerBot.Core.csproj.CoreCompileInputs.cache
-C:\programacion\07-Videojuegos-y-Herramientas\Solar-Deflect\TriggerBot.Core\obj\Release\net8.0\TriggerBot.Core.dll
-C:\programacion\07-Videojuegos-y-Herramientas\Solar-Deflect\TriggerBot.Core\obj\Release\net8.0\refint\TriggerBot.Core.dll
-C:\programacion\07-Videojuegos-y-Herramientas\Solar-Deflect\TriggerBot.Core\obj\Release\net8.0\ref\TriggerBot.Core.dll
