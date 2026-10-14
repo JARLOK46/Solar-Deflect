@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="TriggerBot.App/TriggerBot.App.csproj" />
+  <Project Path="TriggerBot.Configuration/TriggerBot.Configuration.csproj" />
+  <Project Path="TriggerBot.Core/TriggerBot.Core.csproj" />
+  <Project Path="TriggerBot.Licensing/TriggerBot.Licensing.csproj" />
+  <Project Path="TriggerBot.Logging/TriggerBot.Logging.csproj" />
+  <Project Path="TriggerBot.Tests/TriggerBot.Tests.csproj" />
+  <Project Path="TriggerBot.Windows/TriggerBot.Windows.csproj" />
+</Solution>

@@ -1,0 +1,9 @@
+C:\programacion\07-Videojuegos-y-Herramientas\Solar-Deflect\TriggerBot.Licensing\bin\Release\net8.0\TriggerBot.Licensing.deps.json
+C:\programacion\07-Videojuegos-y-Herramientas\Solar-Deflect\TriggerBot.Licensing\bin\Release\net8.0\TriggerBot.Licensing.dll
+C:\programacion\07-Videojuegos-y-Herramientas\Solar-Deflect\TriggerBot.Licensing\obj\Release\net8.0\TriggerBot.Licensing.GeneratedMSBuildEditorConfig.editorconfig
+C:\programacion\07-Videojuegos-y-Herramientas\Solar-Deflect\TriggerBot.Licensing\obj\Release\net8.0\TriggerBot.Licensing.AssemblyInfoInputs.cache
+C:\programacion\07-Videojuegos-y-Herramientas\Solar-Deflect\TriggerBot.Licensing\obj\Release\net8.0\TriggerBot.Licensing.AssemblyInfo.cs
+C:\programacion\07-Videojuegos-y-Herramientas\Solar-Deflect\TriggerBot.Licensing\obj\Release\net8.0\TriggerBot.Licensing.csproj.CoreCompileInputs.cache
+C:\programacion\07-Videojuegos-y-Herramientas\Solar-Deflect\TriggerBot.Licensing\obj\Release\net8.0\TriggerBot.Licensing.dll
+C:\programacion\07-Videojuegos-y-Herramientas\Solar-Deflect\TriggerBot.Licensing\obj\Release\net8.0\refint\TriggerBot.Licensing.dll
+C:\programacion\07-Videojuegos-y-Herramientas\Solar-Deflect\TriggerBot.Licensing\obj\Release\net8.0\ref\TriggerBot.Licensing.dll

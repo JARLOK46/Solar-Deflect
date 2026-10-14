@@ -1,0 +1,114 @@
+<Window x:Class="TriggerBot.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="TriggerBot" Width="1220" Height="780" MinWidth="1040" MinHeight="680"
+        WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="CanResize"
+        Background="{StaticResource CanvasBrush}">
+    <Window.Resources>
+        <Style x:Key="NavButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/><Setter Property="Padding" Value="12,11"/>
+            <Setter Property="Margin" Value="0,2,0,2"/>
+        </Style>
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/><Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="12"/><Setter Property="Padding" Value="20"/>
+        </Style>
+        <Style x:Key="Eyebrow" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="FontSize" Value="10"/><Setter Property="FontWeight" Value="Bold"/><Setter Property="Foreground" Value="{StaticResource TextMutedBrush}"/>
+        </Style>
+        <Style x:Key="Subtle" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="FontSize" Value="12"/><Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+        </Style>
+        <Style x:Key="ValueText" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="FontSize" Value="21"/><Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <Style x:Key="FieldLabel" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="FontSize" Value="12"/><Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/><Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+        <Style TargetType="Slider">
+            <Setter Property="Margin" Value="0,3,0,0"/><Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="{StaticResource SurfaceInsetBrush}"/><Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/><Setter Property="Padding" Value="10,8"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="{StaticResource SurfaceInsetBrush}"/><Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/><Setter Property="Padding" Value="8,6"/>
+        </Style>
+    </Window.Resources>
+
+    <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="14">
+        <Grid>
+            <Grid.RowDefinitions><RowDefinition Height="44"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+            <Border Grid.Row="0" Background="{StaticResource SurfaceBrush}" CornerRadius="14,14,0,0" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                <Grid Margin="18,0,10,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="24" Height="24" CornerRadius="7" Background="{StaticResource AccentBrush}"><TextBlock Text="+" Foreground="#0B1017" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
+                        <TextBlock Text="TRIGGERBOT" Margin="10,0,0,0" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                        <TextBlock Text="/ CONTROL ROOM" Margin="8,0,0,0" FontSize="11" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"><Button Content="—" Width="38" Height="30" Padding="0" Background="Transparent" BorderThickness="0" Click="Minimize_Click" FontSize="16"/><Button Content="×" Width="38" Height="30" Padding="0" Background="Transparent" BorderThickness="0" Click="Close_Click" FontSize="18"/></StackPanel>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="228"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
+                    <Grid Margin="14,24,14,18">
+                        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="OPERATIONS" Style="{StaticResource Eyebrow}" Margin="12,0,0,12"/>
+                            <Button x:Name="DashboardNav" Tag="Dashboard" Style="{StaticResource NavButton}" Click="Navigation_Click"><StackPanel Orientation="Horizontal"><TextBlock Text="◈" Width="30" Foreground="{StaticResource AccentBrush}" FontSize="16"/><TextBlock Text="Dashboard" FontWeight="SemiBold"/></StackPanel></Button>
+                            <Button x:Name="SettingsNav" Tag="Settings" Style="{StaticResource NavButton}" Click="Navigation_Click"><StackPanel Orientation="Horizontal"><TextBlock Text="⚙" Width="30" Foreground="{StaticResource TextMutedBrush}" FontSize="15"/><TextBlock Text="Settings" Foreground="{StaticResource TextSecondaryBrush}"/></StackPanel></Button>
+                            <Button x:Name="SpeedNav" Tag="Speed Test" Style="{StaticResource NavButton}" Click="Navigation_Click"><StackPanel Orientation="Horizontal"><TextBlock Text="◌" Width="30" Foreground="{StaticResource TextMutedBrush}" FontSize="17"/><TextBlock Text="Speed Test" Foreground="{StaticResource TextSecondaryBrush}"/></StackPanel></Button>
+                            <Button x:Name="HelpNav" Tag="Help" Style="{StaticResource NavButton}" Click="Navigation_Click"><StackPanel Orientation="Horizontal"><TextBlock Text="?" Width="30" Foreground="{StaticResource TextMutedBrush}" FontSize="15"/><TextBlock Text="Help" Foreground="{StaticResource TextSecondaryBrush}"/></StackPanel></Button>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2">
+                            <Border Background="{StaticResource AccentDimBrush}" CornerRadius="10" Padding="12" Margin="0,0,0,12"><StackPanel><TextBlock Text="SYSTEM STATUS" Style="{StaticResource Eyebrow}"/><StackPanel Orientation="Horizontal" Margin="0,8,0,0"><Ellipse Width="8" Height="8" Fill="{StaticResource AccentBrush}" Margin="0,0,8,0"/><TextBlock Text="Ready" Foreground="{StaticResource AccentBrush}" FontWeight="SemiBold"/></StackPanel><TextBlock Text="All systems nominal" Style="{StaticResource Subtle}" Margin="0,5,0,0"/></StackPanel></Border>
+                            <Border Background="{StaticResource SurfaceInsetBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="10" Padding="12"><StackPanel><TextBlock Text="LICENSE" Style="{StaticResource Eyebrow}"/><TextBlock Text="Validated" Foreground="{StaticResource AccentBrush}" FontWeight="SemiBold" Margin="0,5,0,0"/><TextBlock Text="Local activation" Style="{StaticResource Subtle}" Margin="0,2,0,0"/></StackPanel></Border>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+                    <Grid Margin="34,28,34,38">
+                        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                        <Grid>
+                            <StackPanel><TextBlock x:Name="SectionTitle" Text="Dashboard" FontSize="29" FontWeight="SemiBold"/><TextBlock x:Name="SectionSubtitle" Text="Configure the signal, then arm the detector when you are ready." Style="{StaticResource Subtle}" Margin="0,6,0,0"/></StackPanel>
+                            <Border HorizontalAlignment="Right" VerticalAlignment="Top" Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="18" Padding="12,7"><StackPanel Orientation="Horizontal"><Ellipse Width="8" Height="8" Fill="{StaticResource AccentBrush}" Margin="0,0,8,0"/><TextBlock Text="READY" FontSize="11" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/></StackPanel></Border>
+                        </Grid>
+
+                        <!-- Dashboard -->
+                        <Grid x:Name="DashboardView" Grid.Row="1" Margin="0,26,0,0">
+                            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                            <Grid Grid.Row="0"><Grid.ColumnDefinitions><ColumnDefinition Width="1.2*"/><ColumnDefinition Width="18"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Style="{StaticResource Card}"><Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions><TextBlock Text="TARGET SIGNAL" Style="{StaticResource Eyebrow}"/><StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,18,0,16"><Border Width="62" Height="62" CornerRadius="12" Background="#B30000" BorderBrush="#E5E7EB" BorderThickness="1"/><StackPanel Margin="16,0,0,0" VerticalAlignment="Center"><TextBlock Text="RGB 179, 0, 0" Style="{StaticResource ValueText}"/><TextBlock x:Name="ColorStatus" Text="Saved target" Style="{StaticResource Subtle}" Margin="0,4,0,0"/></StackPanel></StackPanel><Button Grid.Row="2" Content="SELECT COLOR   ·   F6" Click="SelectColor_Click" HorizontalContentAlignment="Center"/></Grid></Border>
+                                <Border Grid.Column="2" Style="{StaticResource Card}"><Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions><TextBlock Text="DETECTION POSITION" Style="{StaticResource Eyebrow}"/><StackPanel Grid.Row="1" Margin="0,19,0,17"><TextBlock x:Name="PositionValue" Text="Cursor position" Style="{StaticResource ValueText}"/><TextBlock x:Name="PositionStatus" Text="Follows cursor" Style="{StaticResource Subtle}" Margin="0,4,0,0"/></StackPanel><Button Grid.Row="2" Content="FIX POSITION   ·   F7" Click="FixPosition_Click" HorizontalContentAlignment="Center"/></Grid></Border>
+                            </Grid>
+                            <Grid Grid.Row="1" Margin="0,18,0,0"><Grid.ColumnDefinitions><ColumnDefinition Width="1.2*"/><ColumnDefinition Width="18"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Style="{StaticResource Card}"><StackPanel><TextBlock Text="RESPONSE PROFILE" Style="{StaticResource Eyebrow}"/><Grid Margin="0,18,0,8"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions><StackPanel><TextBlock Text="Tolerance" Style="{StaticResource Subtle}"/><TextBlock Text="30" Style="{StaticResource ValueText}" Margin="0,4,0,0"/></StackPanel><StackPanel Grid.Column="1"><TextBlock Text="Click delay" Style="{StaticResource Subtle}"/><TextBlock Text="0.00 s" Style="{StaticResource ValueText}" Margin="0,4,0,0"/></StackPanel><StackPanel Grid.Column="2"><TextBlock Text="Cooldown" Style="{StaticResource Subtle}"/><TextBlock Text="0.10 s" Style="{StaticResource ValueText}" Margin="0,4,0,0"/></StackPanel></Grid><TextBlock Text="Adjust these values in Settings before starting." Foreground="{StaticResource TextMutedBrush}" FontSize="12"/></StackPanel></Border>
+                                <Border Grid.Column="2" Style="{StaticResource Card}"><StackPanel><TextBlock Text="POSITION LOCK" Style="{StaticResource Eyebrow}"/><StackPanel Orientation="Horizontal" Margin="0,17,0,12"><TextBlock Text="Use fixed position" VerticalAlignment="Center" Style="{StaticResource Subtle}"/><CheckBox Margin="16,0,0,0" VerticalAlignment="Center" IsChecked="False"/></StackPanel><TextBlock Text="Optional · off by default" Foreground="{StaticResource TextMutedBrush}" FontSize="12"/></StackPanel></Border>
+                            </Grid>
+                            <Border Grid.Row="2" Margin="0,22,0,0" Background="{StaticResource SurfaceRaisedBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="12" Padding="20"><Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel VerticalAlignment="Center"><TextBlock Text="DETECTOR" Style="{StaticResource Eyebrow}"/><TextBlock Text="Hold E to allow detection" FontSize="15" FontWeight="SemiBold" Margin="0,5,0,0"/><TextBlock Text="F5 toggles the detector on or off." Style="{StaticResource Subtle}" Margin="0,4,0,0"/></StackPanel><Button x:Name="TriggerButton" Grid.Column="1" Content="START TRIGGERBOT" Click="ToggleTrigger_Click" Width="190" Height="48" Background="{StaticResource AccentBrush}" Foreground="#0B1017" FontWeight="Bold" BorderThickness="0"/></Grid></Border>
+                        </Grid>
+
+                        <!-- Settings -->
+                        <Grid x:Name="SettingsView" Grid.Row="1" Margin="0,26,0,0" Visibility="Collapsed"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                            <Border Style="{StaticResource Card}"><StackPanel><TextBlock Text="DETECTION PARAMETERS" Style="{StaticResource Eyebrow}"/><TextBlock Text="Tune the response without losing sight of the signal." FontSize="16" FontWeight="SemiBold" Margin="0,7,0,20"/><Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="28"/><ColumnDefinition/></Grid.ColumnDefinitions><StackPanel><TextBlock Text="Tolerance" Style="{StaticResource FieldLabel}"/><Slider Minimum="0" Maximum="100" Value="30"/><DockPanel Margin="0,4,0,0"><TextBlock Text="Strict" Style="{StaticResource Subtle}"/><TextBlock Text="30 / 100" DockPanel.Dock="Right" Style="{StaticResource Subtle}"/></DockPanel></StackPanel><StackPanel Grid.Column="2"><TextBlock Text="Click delay" Style="{StaticResource FieldLabel}"/><Slider Minimum="0" Maximum="0.5" Value="0.0"/><DockPanel Margin="0,4,0,0"><TextBlock Text="Immediate" Style="{StaticResource Subtle}"/><TextBlock Text="0.00 s" DockPanel.Dock="Right" Style="{StaticResource Subtle}"/></DockPanel></StackPanel></Grid></StackPanel></Border>
+                            <Grid Grid.Row="1" Margin="0,18,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="18"/><ColumnDefinition/></Grid.ColumnDefinitions><Border Grid.Column="0" Style="{StaticResource Card}"><StackPanel><TextBlock Text="COOLDOWN" Style="{StaticResource Eyebrow}"/><TextBlock Text="Time after a detection before re-arming." Style="{StaticResource Subtle}" Margin="0,7,0,16"/><Slider Minimum="0.01" Maximum="0.5" Value="0.1"/><TextBlock Text="0.10 seconds" Foreground="{StaticResource AccentBrush}" FontWeight="SemiBold" Margin="0,8,0,0"/></StackPanel></Border><Border Grid.Column="2" Style="{StaticResource Card}"><StackPanel><TextBlock Text="POSITION MODE" Style="{StaticResource Eyebrow}"/><TextBlock Text="Choose how the target point is resolved." Style="{StaticResource Subtle}" Margin="0,7,0,12"/><RadioButton Content="Follow cursor" IsChecked="True" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,5"/><RadioButton Content="Use fixed position" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,5"/><TextBlock Text="Fixed point: not set" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,8,0,0"/></StackPanel></Border></Grid>
+                            <Border Grid.Row="2" Margin="0,18,0,0" Style="{StaticResource Card}"><Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions><StackPanel><TextBlock Text="THEME" Style="{StaticResource Eyebrow}"/><ComboBox Margin="0,10,14,0" SelectedIndex="0"><ComboBoxItem Content="Dark"/><ComboBoxItem Content="Light"/><ComboBoxItem Content="System"/></ComboBox></StackPanel><StackPanel Grid.Column="1"><TextBlock Text="LANGUAGE" Style="{StaticResource Eyebrow}"/><ComboBox Margin="0,10,14,0" SelectedIndex="0"><ComboBoxItem Content="English"/><ComboBoxItem Content="Español"/></ComboBox></StackPanel><StackPanel Grid.Column="2"><TextBlock Text="OPACITY" Style="{StaticResource Eyebrow}"/><Slider Margin="0,14,0,0" Minimum="40" Maximum="100" Value="100"/><TextBlock Text="100%" Style="{StaticResource Subtle}" Margin="0,4,0,0"/></StackPanel></Grid></Border>
+                        </Grid>
+
+                        <!-- Speed test -->
+                        <Grid x:Name="SpeedTestView" Grid.Row="1" Margin="0,26,0,0" Visibility="Collapsed"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions><Border Style="{StaticResource Card}"><Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel><TextBlock Text="REACTION LAB" Style="{StaticResource Eyebrow}"/><TextBlock Text="Measure the complete signal-to-response path." FontSize="17" FontWeight="SemiBold" Margin="0,7,0,5"/><TextBlock Text="Ten randomized trials · results stay on this device" Style="{StaticResource Subtle}"/></StackPanel><Button Grid.Column="1" Content="RUN 10 TRIALS" Width="150" Height="42" Background="{StaticResource AccentBrush}" Foreground="#0B1017" FontWeight="Bold" BorderThickness="0"/></Grid></Border><Grid Grid.Row="1" Margin="0,18,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="18"/><ColumnDefinition/><ColumnDefinition Width="18"/><ColumnDefinition/></Grid.ColumnDefinitions><Border Grid.Column="0" Style="{StaticResource Card}"><StackPanel><TextBlock Text="BEST" Style="{StaticResource Eyebrow}"/><TextBlock Text="—" Style="{StaticResource ValueText}" Margin="0,12,0,2"/><TextBlock Text="Awaiting test" Style="{StaticResource Subtle}"/></StackPanel></Border><Border Grid.Column="2" Style="{StaticResource Card}"><StackPanel><TextBlock Text="AVERAGE" Style="{StaticResource Eyebrow}"/><TextBlock Text="—" Style="{StaticResource ValueText}" Margin="0,12,0,2"/><TextBlock Text="Awaiting test" Style="{StaticResource Subtle}"/></StackPanel></Border><Border Grid.Column="4" Style="{StaticResource Card}"><StackPanel><TextBlock Text="DEVIATION" Style="{StaticResource Eyebrow}"/><TextBlock Text="—" Style="{StaticResource ValueText}" Margin="0,12,0,2"/><TextBlock Text="Awaiting test" Style="{StaticResource Subtle}"/></StackPanel></Border></Grid></Grid>
+
+                        <!-- Help -->
+                        <Grid x:Name="HelpView" Grid.Row="1" Margin="0,26,0,0" Visibility="Collapsed"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions><Border Style="{StaticResource Card}"><StackPanel><TextBlock Text="QUICK START" Style="{StaticResource Eyebrow}"/><TextBlock Text="A predictable setup in four steps." FontSize="18" FontWeight="SemiBold" Margin="0,7,0,18"/><Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions><StackPanel Margin="0,0,16,0"><TextBlock Text="01" Foreground="{StaticResource AccentBrush}" FontSize="20" FontWeight="Bold"/><TextBlock Text="Select color" FontWeight="SemiBold" Margin="0,8,0,4"/><TextBlock Text="Place the cursor and confirm with F6." Style="{StaticResource Subtle}" TextWrapping="Wrap"/></StackPanel><StackPanel Grid.Column="1" Margin="0,0,16,0"><TextBlock Text="02" Foreground="{StaticResource AccentBrush}" FontSize="20" FontWeight="Bold"/><TextBlock Text="Fix position" FontWeight="SemiBold" Margin="0,8,0,4"/><TextBlock Text="Optional: save a stable point with F7." Style="{StaticResource Subtle}" TextWrapping="Wrap"/></StackPanel><StackPanel Grid.Column="2" Margin="0,0,16,0"><TextBlock Text="03" Foreground="{StaticResource AccentBrush}" FontSize="20" FontWeight="Bold"/><TextBlock Text="Tune response" FontWeight="SemiBold" Margin="0,8,0,4"/><TextBlock Text="Start moderate; adjust tolerance only when needed." Style="{StaticResource Subtle}" TextWrapping="Wrap"/></StackPanel><StackPanel Grid.Column="3"><TextBlock Text="04" Foreground="{StaticResource AccentBrush}" FontSize="20" FontWeight="Bold"/><TextBlock Text="Arm detector" FontWeight="SemiBold" Margin="0,8,0,4"/><TextBlock Text="Press F5, then hold E to allow detection." Style="{StaticResource Subtle}" TextWrapping="Wrap"/></StackPanel></Grid></StackPanel></Border><Border Grid.Row="1" Margin="0,18,0,0" Style="{StaticResource Card}"><StackPanel><TextBlock Text="SAFETY &amp; CONTROL" Style="{StaticResource Eyebrow}"/><TextBlock Text="The detector is intentionally explicit: it only runs when armed and while the activation key is held." Style="{StaticResource Subtle}" Margin="0,9,0,0" TextWrapping="Wrap"/><TextBlock Text="F5  Toggle detector     ·     F6  Capture color     ·     F7  Fix position     ·     E  Allow detection" Foreground="{StaticResource AccentBrush}" FontWeight="SemiBold" Margin="0,18,0,0" TextWrapping="Wrap"/></StackPanel></Border></Grid>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

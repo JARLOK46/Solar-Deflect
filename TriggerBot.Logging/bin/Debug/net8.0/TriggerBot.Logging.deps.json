@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "TriggerBot.Logging/1.0.0": {
+        "runtime": {
+          "TriggerBot.Logging.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "TriggerBot.Logging/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

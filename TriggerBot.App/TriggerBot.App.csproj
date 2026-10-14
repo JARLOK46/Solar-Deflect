@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\TriggerBot.Core\TriggerBot.Core.csproj" />
+    <ProjectReference Include="..\TriggerBot.Windows\TriggerBot.Windows.csproj" />
+    <ProjectReference Include="..\TriggerBot.Configuration\TriggerBot.Configuration.csproj" />
+    <ProjectReference Include="..\TriggerBot.Licensing\TriggerBot.Licensing.csproj" />
+    <ProjectReference Include="..\TriggerBot.Logging\TriggerBot.Logging.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>TriggerBot</AssemblyName>
+    <RootNamespace>TriggerBot.App</RootNamespace>
+  </PropertyGroup>
+
+</Project>
