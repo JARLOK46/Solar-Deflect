@@ -23,7 +23,7 @@ public static class StartupLogger
         Write("logger_initialized", new
         {
             process = Environment.ProcessPath,
-            assembly = Assembly.GetEntryAssembly()?.Location,
+            assembly = Assembly.GetEntryAssembly()?.GetName().Name,
             base_directory = AppContext.BaseDirectory,
             runtime = RuntimeInformation.FrameworkDescription,
             os = RuntimeInformation.OSDescription,

@@ -3,17 +3,57 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Input;
 using TriggerBot.App.ViewModels;
+using TriggerBot.Windows.Input;
 
 namespace TriggerBot.App;
 
 public partial class MainWindow : Window
 {
     private readonly MainViewModel _viewModel = new();
+    private readonly GlobalHotkeyService _hotkeys = new();
 
     public MainWindow()
     {
         InitializeComponent();
         DataContext = _viewModel;
+        SourceInitialized += MainWindow_SourceInitialized;
+        Closed += MainWindow_Closed;
+        _hotkeys.Pressed += Hotkeys_Pressed;
+    }
+
+    private void MainWindow_SourceInitialized(object? sender, EventArgs e)
+    {
+        try
+        {
+            _hotkeys.Attach(this);
+            _viewModel.SetStatus("Ready · F5 toggle · F6 color · F7 position");
+        }
+        catch (HotkeyRegistrationException exception)
+        {
+            _viewModel.SetStatus(exception.Message);
+        }
+    }
+
+    private void MainWindow_Closed(object? sender, EventArgs e)
+    {
+        _hotkeys.Pressed -= Hotkeys_Pressed;
+        _hotkeys.Dispose();
+    }
+
+    private void Hotkeys_Pressed(object? sender, TriggerHotkey hotkey)
+    {
+        switch (hotkey)
+        {
+            case TriggerHotkey.Toggle:
+                ToggleTrigger_Click(this, new RoutedEventArgs());
+                break;
+            case TriggerHotkey.SelectColor:
+                SelectColor_Click(this, new RoutedEventArgs());
+                break;
+            case TriggerHotkey.FixPosition:
+                FixPosition_Click(this, new RoutedEventArgs());
+                break;
+        }
     }
 
     private void Navigation_Click(object sender, RoutedEventArgs e)

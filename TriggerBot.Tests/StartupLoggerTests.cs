@@ -1,3 +1,4 @@
+using System.IO;
 using TriggerBot.Logging;
 
 namespace TriggerBot.Tests;
