@@ -35,6 +35,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public TimeSpan ClickDelay => _settings.ClickDelay;
     public TimeSpan Cooldown => _settings.Cooldown;
     public bool PositionLockEnabled => _settings.PositionLockEnabled;
+    public DetectionSettings Settings => _settings;
 
     public string StatusLabel => _detector.State switch
     {
@@ -69,6 +70,15 @@ public sealed class MainViewModel : INotifyPropertyChanged
     }
 
     public void SetStatus(string status) => Status = status;
+
+    public void MarkFault(Exception exception)
+    {
+        _detector.Fault();
+        Status = $"Detector fault: {exception.Message}";
+        OnPropertyChanged(nameof(IsArmed));
+        OnPropertyChanged(nameof(DetectorState));
+        OnPropertyChanged(nameof(StatusLabel));
+    }
 
     public void SetTargetColor(RgbColor color)
     {

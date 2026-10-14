@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Input;
 using TriggerBot.App.ViewModels;
+using TriggerBot.Core.Detection;
 using TriggerBot.Windows.Input;
 
 namespace TriggerBot.App;
@@ -11,6 +12,9 @@ public partial class MainWindow : Window
 {
     private readonly MainViewModel _viewModel = new();
     private readonly GlobalHotkeyService _hotkeys = new();
+    private readonly DetectionLoop _detectionLoop = new();
+    private readonly WindowsDetectionRuntime _detectionRuntime = new();
+    private CancellationTokenSource? _detectionCancellation;
 
     public MainWindow()
     {
@@ -36,6 +40,8 @@ public partial class MainWindow : Window
 
     private void MainWindow_Closed(object? sender, EventArgs e)
     {
+        _detectionCancellation?.Cancel();
+        _detectionCancellation?.Dispose();
         _hotkeys.Pressed -= Hotkeys_Pressed;
         _hotkeys.Dispose();
     }
@@ -97,11 +103,41 @@ public partial class MainWindow : Window
 
     private void ToggleTrigger_Click(object sender, RoutedEventArgs e)
     {
+        var wasArmed = _viewModel.IsArmed;
         _viewModel.ToggleArmed();
+
+        if (!wasArmed && _viewModel.IsArmed)
+            StartDetection();
+        else if (wasArmed && !_viewModel.IsArmed)
+            StopDetection();
+
         TriggerButton.Content = _viewModel.IsArmed ? "STOP TRIGGERBOT" : "START TRIGGERBOT";
         TriggerButton.Background = _viewModel.IsArmed
             ? new SolidColorBrush(Color.FromRgb(104, 62, 62))
             : (Brush)FindResource("AccentBrush");
+    }
+
+    private void StartDetection()
+    {
+        _detectionCancellation?.Cancel();
+        _detectionCancellation?.Dispose();
+        _detectionCancellation = new CancellationTokenSource();
+        _ = RunDetectionAsync(_detectionCancellation.Token);
+    }
+
+    private void StopDetection() => _detectionCancellation?.Cancel();
+
+    private async Task RunDetectionAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _detectionLoop.RunAsync(_viewModel.Settings, _detectionRuntime, cancellationToken);
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            _viewModel.MarkFault(exception);
+            _detectionCancellation?.Cancel();
+        }
     }
 
     private void SelectColor_Click(object sender, RoutedEventArgs e)
