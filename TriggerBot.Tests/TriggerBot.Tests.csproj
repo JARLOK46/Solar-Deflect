@@ -21,7 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TriggerBot.Core\TriggerBot.Core.csproj" />
     <ProjectReference Include="..\TriggerBot.Logging\TriggerBot.Logging.csproj" />
+    <ProjectReference Include="..\TriggerBot.Windows\TriggerBot.Windows.csproj" />
   </ItemGroup>
 
 </Project>

@@ -66,14 +66,14 @@ public partial class MainWindow : Window
 
     private void SelectColor_Click(object sender, RoutedEventArgs e)
     {
-        _viewModel.Status = "Color selection armed · press F6 over the target pixel";
+        _viewModel.SetStatus("Color selection armed · press F6 over the target pixel");
         ColorStatus.Text = "Waiting for F6";
         ColorStatus.Foreground = (Brush)FindResource("WarningBrush");
     }
 
     private void FixPosition_Click(object sender, RoutedEventArgs e)
     {
-        _viewModel.Status = "Position captured · (959, 571)";
+        _viewModel.SetStatus("Position captured · (959, 571)");
         PositionValue.Text = "(959, 571)";
         PositionStatus.Text = "Fixed position ready";
     }
