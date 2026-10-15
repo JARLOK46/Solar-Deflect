@@ -117,6 +117,7 @@ public partial class MainWindow : Window
             ? $"Punto fijo: ({fixedPoint.X}, {fixedPoint.Y})"
             : "Punto fijo: no definido";
         PositionLockCheckBox.IsChecked = _viewModel.PositionLockEnabled;
+        SpamEnabledCheckBox.IsChecked = _viewModel.SpamEnabled;
         _initializingSettings = false;
     }
 
@@ -150,6 +151,22 @@ public partial class MainWindow : Window
             CooldownValue.Text = $"{settings.Cooldown.TotalSeconds:0.00} s";
             SpamIntervalValue.Text = $"{settings.SpamClickInterval.TotalMilliseconds:0} ms";
             UpdateDashboardSettings();
+        }
+        catch (Exception exception) when (exception is InvalidOperationException or ArgumentOutOfRangeException)
+        {
+            _viewModel.SetStatus(exception.Message);
+            InitializeSettingsDisplay();
+        }
+    }
+
+    private void SpamEnabled_Changed(object sender, RoutedEventArgs e)
+    {
+        if (_initializingSettings || SpamEnabledCheckBox.IsChecked is not bool enabled) return;
+
+        try
+        {
+            _viewModel.UpdateSettings(_viewModel.Settings with { SpamEnabled = enabled });
+            _viewModel.SetStatus(enabled ? "Spam habilitado · mantén R para usarlo" : "Spam deshabilitado");
         }
         catch (Exception exception) when (exception is InvalidOperationException or ArgumentOutOfRangeException)
         {
@@ -341,6 +358,11 @@ public partial class MainWindow : Window
 
     private void StartSpamClicks()
     {
+        if (!_viewModel.SpamEnabled)
+        {
+            _viewModel.SetStatus("Spam deshabilitado · actívalo desde Ajustes");
+            return;
+        }
         if (_spamTask is { IsCompleted: false }) return;
 
         _spamCancellation?.Dispose();

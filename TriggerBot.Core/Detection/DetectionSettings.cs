@@ -10,6 +10,7 @@ public sealed record DetectionSettings
     public TimeSpan ClickDelay { get; init; } = TimeSpan.Zero;
     public TimeSpan Cooldown { get; init; } = TimeSpan.FromMilliseconds(100);
     public TimeSpan SpamClickInterval { get; init; } = TimeSpan.FromMilliseconds(50);
+    public bool SpamEnabled { get; init; } = true;
     public ScreenPoint? LockedPosition { get; init; }
     public bool PositionLockEnabled { get; init; }
 

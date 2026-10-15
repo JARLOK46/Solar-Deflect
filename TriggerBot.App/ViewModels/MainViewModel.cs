@@ -44,6 +44,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public TimeSpan ClickDelay => _settings.ClickDelay;
     public TimeSpan Cooldown => _settings.Cooldown;
     public TimeSpan SpamClickInterval => _settings.SpamClickInterval;
+    public bool SpamEnabled => _settings.SpamEnabled;
     public bool PositionLockEnabled => _settings.PositionLockEnabled;
     public DetectionSettings Settings => _settings;
 
@@ -124,6 +125,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(ClickDelay));
         OnPropertyChanged(nameof(Cooldown));
         OnPropertyChanged(nameof(SpamClickInterval));
+        OnPropertyChanged(nameof(SpamEnabled));
         OnPropertyChanged(nameof(PositionLockEnabled));
     }
 
