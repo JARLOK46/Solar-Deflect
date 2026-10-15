@@ -4,7 +4,7 @@
         Title="Prueba de reacción" Width="448" Height="340"
         WindowStartupLocation="CenterScreen" WindowStyle="None"
         ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True"
-        Background="{StaticResource CanvasBrush}" UseLayoutRounding="True">
+        AllowsTransparency="True" Background="Transparent" UseLayoutRounding="True">
     <Window.Resources>
         <!-- This window is a separate visual tree, so it needs its own local text style. -->
         <Style x:Key="Subtle" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">

@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="TriggerBot" Width="1320" Height="840" MinWidth="1080" MinHeight="700"
         WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="CanResize"
-        Background="{StaticResource CanvasBrush}" UseLayoutRounding="True">
+        AllowsTransparency="True" Background="Transparent" UseLayoutRounding="True">
     <Window.Resources>
         <Style x:Key="NavButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
             <Setter Property="Background" Value="Transparent" />
