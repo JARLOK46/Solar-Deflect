@@ -415,7 +415,7 @@
                     </ScrollViewer>
 
                     <Border Grid.Row="2" BorderBrush="{StaticResource BorderSoftBrush}" BorderThickness="0,1,0,0"
-                            Padding="34,10" Background="{StaticResource SidebarBrush}">
+                            CornerRadius="0,0,15,0" Padding="34,10" Background="{StaticResource SidebarBrush}">
                         <Grid>
                             <TextBlock Text="CONTROL LOCAL · NO SE ENVÍAN DATOS" Foreground="{StaticResource TextMutedBrush}" FontSize="9" VerticalAlignment="Center" />
                             <TextBlock x:Name="StatusText" Text="Listo" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="170,0,160,0" />
