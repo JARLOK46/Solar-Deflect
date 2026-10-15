@@ -5,6 +5,13 @@
         WindowStartupLocation="CenterScreen" WindowStyle="None"
         ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True"
         Background="{StaticResource CanvasBrush}" UseLayoutRounding="True">
+    <Window.Resources>
+        <!-- This window is a separate visual tree, so it needs its own local text style. -->
+        <Style x:Key="Subtle" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
+        </Style>
+    </Window.Resources>
     <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="18" Background="{StaticResource SurfaceBrush}">
         <Grid>
             <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
