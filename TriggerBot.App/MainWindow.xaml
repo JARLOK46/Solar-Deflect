@@ -1,7 +1,7 @@
 <Window x:Class="TriggerBot.App.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="TriggerBot" Width="1320" Height="840" MinWidth="1080" MinHeight="700"
+        Title="Solar Deflect" Width="1320" Height="840" MinWidth="1080" MinHeight="700"
         WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="CanResize"
         AllowsTransparency="True" Background="Transparent" UseLayoutRounding="True">
     <Window.Resources>
@@ -81,10 +81,16 @@
                 <Grid Margin="18,0,10,0">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Border Width="27" Height="27" CornerRadius="8" Background="{StaticResource AccentBrush}">
-                            <TextBlock Text="T" Foreground="#07120F" FontSize="15" FontWeight="Black"
-                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <Grid>
+                                <Ellipse Width="13" Height="13" Stroke="#07120F" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <Ellipse Width="4" Height="4" Fill="#07120F" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <Line X1="13.5" Y1="3" X2="13.5" Y2="7" Stroke="#07120F" StrokeThickness="1.5" />
+                                <Line X1="13.5" Y1="20" X2="13.5" Y2="24" Stroke="#07120F" StrokeThickness="1.5" />
+                                <Line X1="3" Y1="13.5" X2="7" Y2="13.5" Stroke="#07120F" StrokeThickness="1.5" />
+                                <Line X1="20" Y1="13.5" X2="24" Y2="13.5" Stroke="#07120F" StrokeThickness="1.5" />
+                            </Grid>
                         </Border>
-                        <TextBlock Text="TRIGGERBOT" Margin="11,0,0,0" FontSize="12" FontWeight="Bold"
+                        <TextBlock Text="SOLAR DEFLECT" Margin="11,0,0,0" FontSize="12" FontWeight="Bold"
                                    Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center" />
                         <Border Margin="12,0,0,0" Padding="8,3" CornerRadius="6" Background="{StaticResource SurfaceRaisedBrush}">
                             <TextBlock Text="DESKTOP" FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" />
@@ -141,7 +147,7 @@
                                                Margin="0,7,0,0" TextWrapping="Wrap" FontSize="11" />
                                 </StackPanel>
                             </Border>
-                            <TextBlock Text="TRIGGERBOT  ·  VERSIÓN DESKTOP" Foreground="{StaticResource TextMutedBrush}"
+                            <TextBlock Text="SOLAR DEFLECT  ·  VERSIÓN DESKTOP" Foreground="{StaticResource TextMutedBrush}"
                                        FontSize="9" HorizontalAlignment="Center" />
                         </StackPanel>
                     </Grid>

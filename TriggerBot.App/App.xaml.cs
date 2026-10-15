@@ -71,8 +71,8 @@ public partial class App : Application
         try
         {
             MessageBox.Show(
-                $"TriggerBot no pudo iniciar.\n\nDetalle: {exception.Message}\n\nRegistro:\n{StartupLogger.LogPath}",
-                "TriggerBot - Error de inicio",
+                $"Solar Deflect no pudo iniciar.\n\nDetalle: {exception.Message}\n\nRegistro:\n{StartupLogger.LogPath}",
+                "Solar Deflect - Error de inicio",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
         }
