@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 using TriggerBot.Core.Detection;
@@ -41,7 +41,7 @@ public partial class SpeedTestWindow : Window
             if (completed != clickDetected.Task)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                throw new TimeoutException("No detector click was received during the speed test trial.");
+                throw new TimeoutException("No se detectó ningún clic durante esta prueba.");
             }
 
             stopwatch.Stop();
@@ -56,7 +56,7 @@ public partial class SpeedTestWindow : Window
 
     private void SetTrial(int trial)
     {
-        Dispatcher.Invoke(() => TrialLabel.Text = $"Trial {trial} / 10");
+        Dispatcher.Invoke(() => TrialLabel.Text = $"Prueba {trial} de 10");
     }
 
     private void SetSignalActive(bool active)
@@ -66,7 +66,7 @@ public partial class SpeedTestWindow : Window
             SignalSurface.Background = active
                 ? new SolidColorBrush(Color.FromRgb(SignalColor.Red, SignalColor.Green, SignalColor.Blue))
                 : new SolidColorBrush(Color.FromRgb(5, 7, 10));
-            SignalLabel.Text = active ? "SIGNAL" : "WAITING";
+            SignalLabel.Text = active ? "¡AHORA!" : "PREPÁRATE";
             SignalLabel.Foreground = active
                 ? new SolidColorBrush(Colors.White)
                 : new SolidColorBrush(Color.FromRgb(113, 130, 150));

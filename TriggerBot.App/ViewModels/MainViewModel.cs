@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using TriggerBot.Configuration;
 using TriggerBot.Core.Detection;
@@ -10,7 +10,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private readonly DetectorController _detector = new();
     private readonly DetectionConfigurationStore _configurationStore = new();
     private string _activeSection = "Dashboard";
-    private string _status = "Ready to configure";
+    private string _status = "Listo para configurar";
     private DetectionSettings _settings;
 
     public MainViewModel()
@@ -37,9 +37,10 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public RgbColor? TargetColor => _settings.TargetColor;
     public string TargetColorLabel => TargetColor is { } color
         ? $"RGB {color.Red}, {color.Green}, {color.Blue}"
-        : "No target selected";
-    public string TargetColorStatus => TargetColor is null ? "Select a target with F6" : "Saved target";
+        : "Sin color seleccionado";
+    public string TargetColorStatus => TargetColor is null ? "Selecciona un color con F6" : "Color guardado";
     public int Tolerance => _settings.Tolerance;
+    public TimeSpan ClickInterval => _settings.ClickInterval;
     public TimeSpan ClickDelay => _settings.ClickDelay;
     public TimeSpan Cooldown => _settings.Cooldown;
     public bool PositionLockEnabled => _settings.PositionLockEnabled;
@@ -47,9 +48,9 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     public string StatusLabel => _detector.State switch
     {
-        DetectorState.Armed or DetectorState.Running => "Active",
-        DetectorState.Faulted => "Fault",
-        _ => "Standby"
+        DetectorState.Armed or DetectorState.Running => "Activo",
+        DetectorState.Faulted => "Error",
+        _ => "En espera"
     };
 
     public void ToggleArmed()
@@ -57,14 +58,14 @@ public sealed class MainViewModel : INotifyPropertyChanged
         if (IsArmed)
         {
             _detector.Stop();
-            Status = "TriggerBot stopped";
+            Status = "Detector detenido";
         }
         else
         {
             try
             {
                 _detector.Arm(_settings);
-                Status = "TriggerBot armed · hold E to detect";
+                Status = "Detector activado · mantén E para detectar";
             }
             catch (Exception exception) when (exception is InvalidOperationException or ArgumentOutOfRangeException)
             {
@@ -82,7 +83,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     public void MarkFault(Exception exception)
     {
         _detector.Fault();
-        Status = $"Detector fault: {exception.Message}";
+        Status = $"Error del detector: {exception.Message}";
         OnPropertyChanged(nameof(IsArmed));
         OnPropertyChanged(nameof(DetectorState));
         OnPropertyChanged(nameof(StatusLabel));
@@ -93,7 +94,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         EnsureStopped();
         _settings = _settings with { TargetColor = color };
         PersistSettings();
-        Status = $"Target color set to RGB {color.Red}, {color.Green}, {color.Blue}";
+        Status = $"Color objetivo: RGB {color.Red}, {color.Green}, {color.Blue}";
         OnPropertyChanged(nameof(TargetColor));
         OnPropertyChanged(nameof(TargetColorLabel));
         OnPropertyChanged(nameof(TargetColorStatus));
@@ -104,7 +105,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
         EnsureStopped();
         _settings = _settings with { LockedPosition = point };
         PersistSettings();
-        Status = $"Position captured at ({point.X}, {point.Y})";
+        Status = $"Posición guardada en ({point.X}, {point.Y})";
         OnPropertyChanged(nameof(Settings));
     }
 
@@ -116,8 +117,9 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
         _settings = settings;
         PersistSettings();
-        Status = "Settings updated";
+        Status = "Ajustes actualizados";
         OnPropertyChanged(nameof(Tolerance));
+        OnPropertyChanged(nameof(ClickInterval));
         OnPropertyChanged(nameof(ClickDelay));
         OnPropertyChanged(nameof(Cooldown));
         OnPropertyChanged(nameof(PositionLockEnabled));
@@ -128,7 +130,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
     private void EnsureStopped()
     {
         if (IsArmed)
-            throw new InvalidOperationException("Stop the detector before changing settings.");
+            throw new InvalidOperationException("Detén el detector antes de cambiar los ajustes.");
     }
 
     private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)

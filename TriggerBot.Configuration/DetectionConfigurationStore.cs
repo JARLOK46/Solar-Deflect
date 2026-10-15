@@ -24,16 +24,21 @@ public sealed class DetectionConfigurationStore
 
     public DetectionSettings LoadOrDefault()
     {
+        if (!File.Exists(FilePath)) return DetectionSettings.Default;
+
         try
         {
-            if (!File.Exists(FilePath)) return DetectionSettings.Default;
             var json = File.ReadAllText(FilePath);
             var settings = JsonSerializer.Deserialize<DetectionSettings>(json, JsonOptions)
                 ?? DetectionSettings.Default;
             settings.Validate();
             return settings;
         }
-        catch (Exception) when (File.Exists(FilePath))
+        catch (Exception exception) when (exception is IOException
+            or UnauthorizedAccessException
+            or JsonException
+            or ArgumentException
+            or InvalidOperationException)
         {
             return DetectionSettings.Default;
         }
@@ -48,14 +53,26 @@ public sealed class DetectionConfigurationStore
             ?? throw new InvalidOperationException("Configuration path has no directory.");
         Directory.CreateDirectory(directory);
 
-        var temporaryPath = FilePath + ".tmp";
-        var backupPath = FilePath + ".bak";
-        var json = JsonSerializer.Serialize(settings, JsonOptions);
-        File.WriteAllText(temporaryPath, json);
+        // A unique sibling temp file avoids collisions between concurrent saves and
+        // ensures the final rename stays on the same volume.
+        var temporaryPath = FilePath + "." + Guid.NewGuid().ToString("N") + ".tmp";
+        try
+        {
+            var json = JsonSerializer.Serialize(settings, JsonOptions);
+            using (var stream = new FileStream(temporaryPath, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+            using (var writer = new StreamWriter(stream))
+            {
+                writer.Write(json);
+                writer.Flush();
+                stream.Flush(flushToDisk: true);
+            }
 
-        if (File.Exists(FilePath))
-            File.Replace(temporaryPath, FilePath, backupPath, ignoreMetadataErrors: true);
-        else
-            File.Move(temporaryPath, FilePath);
+            File.Move(temporaryPath, FilePath, overwrite: true);
+        }
+        finally
+        {
+            if (File.Exists(temporaryPath))
+                File.Delete(temporaryPath);
+        }
     }
 }

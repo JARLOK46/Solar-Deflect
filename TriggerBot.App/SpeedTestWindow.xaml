@@ -1,16 +1,51 @@
-<Window x:Class="TriggerBot.App.SpeedTestWindow"
+﻿<Window x:Class="TriggerBot.App.SpeedTestWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Reaction Lab" Width="360" Height="260"
+        Title="Prueba de reacción" Width="448" Height="340"
         WindowStartupLocation="CenterScreen" WindowStyle="None"
         ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True"
-        Background="#070B11">
-    <Border BorderBrush="#2C4050" BorderThickness="1" CornerRadius="14" Background="#0D151E">
-        <Grid Margin="22">
+        Background="{StaticResource CanvasBrush}" UseLayoutRounding="True">
+    <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="18" Background="{StaticResource SurfaceBrush}">
+        <Grid>
             <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-            <StackPanel><TextBlock Text="REACTION LAB" Foreground="#5BE0C5" FontSize="10" FontWeight="Bold"/><TextBlock Text="Hold E and watch the signal" Foreground="#F4F7FA" FontSize="16" FontWeight="SemiBold" Margin="0,7,0,0"/></StackPanel>
-            <Border x:Name="SignalSurface" Grid.Row="1" Margin="0,18,0,18" Background="#05070A" CornerRadius="10" BorderBrush="#1D2B38" BorderThickness="1"><TextBlock x:Name="SignalLabel" Text="WAITING" Foreground="#718296" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" FontWeight="Bold"/></Border>
-            <TextBlock x:Name="TrialLabel" Grid.Row="2" Text="Trial 0 / 10" Foreground="#AAB8C7" FontSize="12" HorizontalAlignment="Center"/>
+            <Grid Margin="25,22,25,0">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Border Width="28" Height="28" CornerRadius="9" Background="{StaticResource AccentDimBrush}">
+                            <TextBlock Text="◷" FontSize="17" Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Margin="11,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="LABORATORIO DE RESPUESTA" FontSize="9" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" />
+                            <TextBlock Text="Prueba de reacción" FontSize="18" FontWeight="SemiBold" Margin="0,2,0,0" />
+                        </StackPanel>
+                    </StackPanel>
+                    <TextBlock Text="Mantén E pulsada. Haz clic cuando veas la señal." Style="{StaticResource Subtle}" Margin="0,12,0,0" />
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Row="1" Margin="25,18,25,18">
+                <Border x:Name="SignalSurface" Background="#05070A" CornerRadius="15"
+                        BorderBrush="{StaticResource BorderSoftBrush}" BorderThickness="1">
+                    <Grid>
+                        <Ellipse Width="100" Height="100" Fill="#16FFFFFF" />
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock x:Name="SignalLabel" Text="PREPÁRATE" Foreground="{StaticResource TextMutedBrush}"
+                                       HorizontalAlignment="Center" FontSize="12" FontWeight="Bold" />
+                            <TextBlock Text="La señal aparecerá aquí" Foreground="{StaticResource TextSecondaryBrush}"
+                                       HorizontalAlignment="Center" FontSize="10" Margin="0,6,0,0" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+            <Border Grid.Row="2" Background="{StaticResource SidebarBrush}" BorderBrush="{StaticResource BorderSoftBrush}"
+                    BorderThickness="0,1,0,0" CornerRadius="0,0,17,17" Padding="25,13">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Ellipse Width="7" Height="7" Fill="{StaticResource AccentBrush}" Margin="0,0,8,0" />
+                        <TextBlock x:Name="TrialLabel" Text="Prueba 0 de 10" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <TextBlock Text="F5 · Cancelar" Foreground="{StaticResource TextMutedBrush}" FontSize="10" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                </Grid>
+            </Border>
         </Grid>
     </Border>
 </Window>

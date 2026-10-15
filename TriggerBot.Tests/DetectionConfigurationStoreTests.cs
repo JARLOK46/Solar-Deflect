@@ -34,6 +34,27 @@ public sealed class DetectionConfigurationStoreTests
     }
 
     [Fact]
+    public void RepeatedSaveReplacesExistingConfigurationWithoutLeavingTemporaryFiles()
+    {
+        var directory = Path.Combine(Path.GetTempPath(), "TriggerBotTests", Guid.NewGuid().ToString("N"));
+        var path = Path.Combine(directory, "config.json");
+
+        try
+        {
+            var store = new DetectionConfigurationStore(path);
+            store.Save(DetectionSettings.Default with { Tolerance = 18 });
+            store.Save(DetectionSettings.Default with { Tolerance = 42 });
+
+            Assert.Equal(42, store.LoadOrDefault().Tolerance);
+            Assert.Equal(new[] { "config.json" }, Directory.GetFiles(directory).Select(Path.GetFileName));
+        }
+        finally
+        {
+            if (Directory.Exists(directory)) Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [Fact]
     public void CorruptConfigurationFallsBackToDefaults()
     {
         var path = Path.Combine(Path.GetTempPath(), "TriggerBotTests", Guid.NewGuid().ToString("N"), "config.json");
