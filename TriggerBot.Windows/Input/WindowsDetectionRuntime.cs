@@ -8,9 +8,11 @@ namespace TriggerBot.Windows.Input;
 public sealed class WindowsDetectionRuntime : IDetectionRuntime
 {
     private const int VkE = 0x45;
+    private const int VkR = 0x52;
     private readonly GdiPixelReader _pixelReader = new();
 
     public bool IsActivationKeyPressed => (NativeMethods.GetAsyncKeyState(VkE) & 0x8000) != 0;
+    public bool IsSpamKeyPressed => (NativeMethods.GetAsyncKeyState(VkR) & 0x8000) != 0;
 
     public ScreenPoint GetCursorPosition()
     {

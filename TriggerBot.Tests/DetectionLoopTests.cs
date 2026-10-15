@@ -98,6 +98,7 @@ public sealed class DetectionLoopTests
         public int Clicks { get; private set; }
         public int Reads { get; private set; }
         public bool IsActivationKeyPressed => ActivationPressed;
+        public bool IsSpamKeyPressed => false;
         public ScreenPoint GetCursorPosition() => new(10, 20);
         public RgbColor ReadPixel(ScreenPoint point)
         {

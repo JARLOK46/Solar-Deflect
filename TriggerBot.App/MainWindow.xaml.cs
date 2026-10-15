@@ -18,6 +18,8 @@ public partial class MainWindow : Window
     private CancellationTokenSource? _detectionCancellation;
     private Task? _detectionTask;
     private CancellationTokenSource? _speedTestCancellation;
+    private CancellationTokenSource? _spamCancellation;
+    private Task? _spamTask;
     private bool _awaitingColorSelection;
     private bool _awaitingPositionSelection;
     // Slider ValueChanged can fire while InitializeComponent is still constructing
@@ -43,7 +45,14 @@ public partial class MainWindow : Window
     private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(MainViewModel.Status))
+        {
             StatusText.Text = _viewModel.Status;
+            AlertText.Text = _viewModel.Status;
+            var isError = _viewModel.Status.Contains("error", StringComparison.OrdinalIgnoreCase)
+                || _viewModel.Status.Contains("fall", StringComparison.OrdinalIgnoreCase);
+            AlertBanner.Background = (Brush)FindResource(isError ? "DangerBrush" : "AccentDimBrush");
+            AlertText.Foreground = (Brush)FindResource(isError ? "TextPrimaryBrush" : "AccentBrush");
+        }
     }
 
     private void MainWindow_SourceInitialized(object? sender, EventArgs e)
@@ -63,6 +72,7 @@ public partial class MainWindow : Window
     {
         _detectionCancellation?.Cancel();
         _speedTestCancellation?.Cancel();
+        _spamCancellation?.Cancel();
         _hotkeys.Pressed -= Hotkeys_Pressed;
         _viewModel.PropertyChanged -= ViewModel_PropertyChanged;
         _hotkeys.Dispose();
@@ -83,6 +93,9 @@ public partial class MainWindow : Window
                 if (_awaitingPositionSelection) CaptureFixedPosition();
                 else FixPosition_Click(this, new RoutedEventArgs());
                 break;
+            case TriggerHotkey.Spam:
+                StartSpamClicks();
+                break;
         }
     }
 
@@ -93,10 +106,12 @@ public partial class MainWindow : Window
         ClickIntervalSlider.Value = _viewModel.ClickInterval.TotalMilliseconds;
         ClickDelaySlider.Value = _viewModel.ClickDelay.TotalSeconds;
         CooldownSlider.Value = _viewModel.Cooldown.TotalSeconds;
+        SpamIntervalSlider.Value = _viewModel.SpamClickInterval.TotalMilliseconds;
         ToleranceValue.Text = $"{_viewModel.Tolerance} / 100";
         ClickIntervalValue.Text = $"{_viewModel.ClickInterval.TotalMilliseconds:0} ms";
         ClickDelayValue.Text = $"{_viewModel.ClickDelay.TotalSeconds:0.00} s";
         CooldownValue.Text = $"{_viewModel.Cooldown.TotalSeconds:0.00} s";
+        SpamIntervalValue.Text = $"{_viewModel.SpamClickInterval.TotalMilliseconds:0} ms";
         PositionModeValue.Text = _viewModel.PositionLockEnabled ? "Usar punto fijo" : "Sigue el cursor";
         FixedPositionValue.Text = _viewModel.Settings.LockedPosition is { } fixedPoint
             ? $"Punto fijo: ({fixedPoint.X}, {fixedPoint.Y})"
@@ -122,12 +137,18 @@ public partial class MainWindow : Window
             Tolerance = (int)Math.Round(ToleranceSlider.Value),
             ClickInterval = TimeSpan.FromMilliseconds(Math.Round(ClickIntervalSlider.Value)),
             ClickDelay = TimeSpan.FromSeconds(ClickDelaySlider.Value),
-            Cooldown = TimeSpan.FromSeconds(CooldownSlider.Value)
+            Cooldown = TimeSpan.FromSeconds(CooldownSlider.Value),
+            SpamClickInterval = TimeSpan.FromMilliseconds(Math.Round(SpamIntervalSlider.Value))
         };
 
         try
         {
             _viewModel.UpdateSettings(settings);
+            ToleranceValue.Text = $"{settings.Tolerance} / 100";
+            ClickIntervalValue.Text = $"{settings.ClickInterval.TotalMilliseconds:0} ms";
+            ClickDelayValue.Text = $"{settings.ClickDelay.TotalSeconds:0.00} s";
+            CooldownValue.Text = $"{settings.Cooldown.TotalSeconds:0.00} s";
+            SpamIntervalValue.Text = $"{settings.SpamClickInterval.TotalMilliseconds:0} ms";
             UpdateDashboardSettings();
         }
         catch (Exception exception) when (exception is InvalidOperationException or ArgumentOutOfRangeException)
@@ -317,6 +338,40 @@ public partial class MainWindow : Window
     }
 
     private void StopDetection() => _detectionCancellation?.Cancel();
+
+    private void StartSpamClicks()
+    {
+        if (_spamTask is { IsCompleted: false }) return;
+
+        _spamCancellation?.Dispose();
+        _spamCancellation = new CancellationTokenSource();
+        var cancellation = _spamCancellation;
+        _viewModel.SetStatus($"Spam activo · mantén R · {_viewModel.SpamClickInterval.TotalMilliseconds:0} ms");
+        _spamTask = Task.Run(() => RunSpamClicksAsync(cancellation));
+    }
+
+    private async Task RunSpamClicksAsync(CancellationTokenSource cancellation)
+    {
+        try
+        {
+            var interval = _viewModel.SpamClickInterval;
+            while (!cancellation.IsCancellationRequested && _detectionRuntime.IsSpamKeyPressed)
+            {
+                _detectionRuntime.LeftClick();
+                await Task.Delay(interval, cancellation.Token).ConfigureAwait(false);
+            }
+        }
+        catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
+        {
+        }
+        finally
+        {
+            await Dispatcher.InvokeAsync(() => _viewModel.SetStatus("Spam detenido · pulsa R para repetir"));
+            if (ReferenceEquals(_spamCancellation, cancellation))
+                _spamCancellation = null;
+            cancellation.Dispose();
+        }
+    }
 
     private async Task RunDetectionAsync(Task? previousTask, CancellationTokenSource cancellation)
     {

@@ -8,7 +8,8 @@ public enum TriggerHotkey
 {
     Toggle = 1,
     SelectColor = 2,
-    FixPosition = 3
+    FixPosition = 3,
+    Spam = 4
 }
 
 public sealed class GlobalHotkeyService : IDisposable
@@ -18,6 +19,7 @@ public sealed class GlobalHotkeyService : IDisposable
     private const uint VkF5 = 0x74;
     private const uint VkF6 = 0x75;
     private const uint VkF7 = 0x76;
+    private const uint VkR = 0x52;
     private readonly Dictionary<int, TriggerHotkey> _registered = new();
     private HwndSource? _source;
     private IntPtr _windowHandle;
@@ -39,6 +41,7 @@ public sealed class GlobalHotkeyService : IDisposable
             Register(1, TriggerHotkey.Toggle, VkF5);
             Register(2, TriggerHotkey.SelectColor, VkF6);
             Register(3, TriggerHotkey.FixPosition, VkF7);
+            Register(4, TriggerHotkey.Spam, VkR);
         }
         catch
         {
