@@ -373,6 +373,11 @@ public partial class MainWindow : Window
             var point = _detectionRuntime.GetCursorPosition();
             var color = _detectionRuntime.ReadPixel(point);
             _viewModel.SetTargetColor(color);
+            // When fixed-position mode is enabled, F6 must capture the color and
+            // its coordinate as one pair. Otherwise the detector may keep reading
+            // an older point while the user is looking at the newly captured color.
+            if (_viewModel.PositionLockEnabled)
+                _viewModel.SetLockedPosition(point);
             _awaitingColorSelection = false;
             TargetColorValue.Text = _viewModel.TargetColorLabel;
             TargetColorSwatch.Background = new SolidColorBrush(Color.FromRgb(color.Red, color.Green, color.Blue));
