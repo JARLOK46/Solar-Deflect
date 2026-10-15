@@ -68,7 +68,7 @@
         </Style>
     </Window.Resources>
 
-    <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="16" Background="{StaticResource CanvasBrush}">
+    <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0" CornerRadius="16" Background="{StaticResource CanvasBrush}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="48" />
@@ -169,7 +169,7 @@
                         </Border>
                     </Grid>
 
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
                         <Grid Margin="34,0,34,28">
                             <!-- Dashboard -->
                             <Grid x:Name="DashboardView">
