@@ -167,12 +167,6 @@
                                 <TextBlock Text="SESIÓN LOCAL" FontSize="9" FontWeight="Bold" Foreground="{StaticResource AccentBrush}" />
                             </StackPanel>
                         </Border>
-                        <Border x:Name="AlertBanner" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,0,-44"
-                                Background="{StaticResource AccentDimBrush}" BorderBrush="{StaticResource AccentGlowBrush}" BorderThickness="1"
-                                CornerRadius="9" Padding="12,7" Visibility="Visible" Panel.ZIndex="5">
-                            <TextBlock x:Name="AlertText" Text="Listo para configurar" Foreground="{StaticResource AccentBrush}" FontSize="11"
-                                       FontWeight="SemiBold" TextTrimming="CharacterEllipsis" MaxWidth="360" />
-                        </Border>
                     </Grid>
 
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
@@ -418,7 +412,13 @@
                             Padding="34,10" Background="{StaticResource SidebarBrush}">
                         <Grid>
                             <TextBlock Text="CONTROL LOCAL · NO SE ENVÍAN DATOS" Foreground="{StaticResource TextMutedBrush}" FontSize="9" VerticalAlignment="Center" />
-                            <TextBlock x:Name="StatusText" Text="Listo" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="170,0,160,0" />
+                            <Border x:Name="AlertBanner" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Background="{StaticResource AccentDimBrush}" BorderBrush="{StaticResource AccentGlowBrush}" BorderThickness="1"
+                                    CornerRadius="8" Padding="12,5" MaxWidth="430">
+                                <TextBlock x:Name="AlertText" Text="Listo para configurar" Foreground="{StaticResource AccentBrush}" FontSize="10"
+                                           FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                            </Border>
+                            <TextBlock x:Name="StatusText" Text="Listo" Visibility="Collapsed" />
                             <TextBlock Text="F5  Iniciar · R  Spam" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10" HorizontalAlignment="Right" VerticalAlignment="Center" />
                         </Grid>
                     </Border>
