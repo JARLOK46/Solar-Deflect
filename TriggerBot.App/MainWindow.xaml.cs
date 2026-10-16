@@ -320,6 +320,7 @@ public partial class MainWindow : Window
         SectionTitle.Text = section switch
         {
             "Settings" => "Ajustes",
+            "Macro" => "Curva macro",
             "Speed Test" => "Prueba de velocidad",
             "Help" => "Ayuda y guía rápida",
             _ => "Panel de control"
@@ -327,6 +328,7 @@ public partial class MainWindow : Window
         SectionSubtitle.Text = section switch
         {
             "Settings" => "Personaliza la sensibilidad y los tiempos de respuesta.",
+            "Macro" => "Configura la curva y los botones de la macro de cámara.",
             "Speed Test" => "Comprueba el tiempo entre la señal y la respuesta.",
             "Help" => "Todo lo necesario para empezar de forma segura.",
             _ => "Configura el objetivo y activa la detección cuando estés listo."
@@ -334,6 +336,7 @@ public partial class MainWindow : Window
 
         DashboardView.Visibility = section == "Dashboard" ? Visibility.Visible : Visibility.Collapsed;
         SettingsView.Visibility = section == "Settings" ? Visibility.Visible : Visibility.Collapsed;
+        MacroView.Visibility = section == "Macro" ? Visibility.Visible : Visibility.Collapsed;
         SpeedTestView.Visibility = section == "Speed Test" ? Visibility.Visible : Visibility.Collapsed;
         HelpView.Visibility = section == "Help" ? Visibility.Visible : Visibility.Collapsed;
 
@@ -341,6 +344,7 @@ public partial class MainWindow : Window
         var inactiveBrush = (Brush)FindResource("TextMutedBrush");
         SetNavigationState(DashboardNav, section == "Dashboard", activeBrush, inactiveBrush);
         SetNavigationState(SettingsNav, section == "Settings", activeBrush, inactiveBrush);
+        SetNavigationState(MacroNav, section == "Macro", activeBrush, inactiveBrush);
         SetNavigationState(SpeedNav, section == "Speed Test", activeBrush, inactiveBrush);
         SetNavigationState(HelpNav, section == "Help", activeBrush, inactiveBrush);
     }

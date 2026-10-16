@@ -126,6 +126,9 @@
                             <Button x:Name="SettingsNav" Tag="Settings" Style="{StaticResource NavButton}" Click="Navigation_Click">
                                 <StackPanel Orientation="Horizontal"><TextBlock Text="⚙" Width="32" FontSize="15" Foreground="{StaticResource TextMutedBrush}"/><TextBlock Text="Ajustes" FontSize="13"/></StackPanel>
                             </Button>
+                            <Button x:Name="MacroNav" Tag="Macro" Style="{StaticResource NavButton}" Click="Navigation_Click">
+                                <StackPanel Orientation="Horizontal"><TextBlock Text="⌁" Width="32" FontSize="18" Foreground="{StaticResource TextMutedBrush}"/><TextBlock Text="Curva macro" FontSize="13"/></StackPanel>
+                            </Button>
                             <Button x:Name="SpeedNav" Tag="Speed Test" Style="{StaticResource NavButton}" Click="Navigation_Click">
                                 <StackPanel Orientation="Horizontal"><TextBlock Text="◷" Width="32" FontSize="17" Foreground="{StaticResource TextMutedBrush}"/><TextBlock Text="Prueba de velocidad" FontSize="13"/></StackPanel>
                             </Button>
@@ -160,11 +163,11 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Grid Margin="34,26,34,20">
+                    <Grid Margin="24,22,24,16">
                         <StackPanel>
                             <TextBlock x:Name="SectionTitle" Text="Panel de control" FontSize="28" FontWeight="SemiBold" />
                             <TextBlock x:Name="SectionSubtitle" Text="Configura el objetivo y activa la detección cuando estés listo."
-                                       Style="{StaticResource Subtle}" Margin="0,5,0,0" />
+                                       Style="{StaticResource Subtle}" Margin="0,5,0,0" TextWrapping="Wrap" />
                         </StackPanel>
                         <Border HorizontalAlignment="Right" VerticalAlignment="Top" Background="{StaticResource SurfaceBrush}"
                                 BorderBrush="{StaticResource BorderSoftBrush}" BorderThickness="1" CornerRadius="18" Padding="11,7">
@@ -175,7 +178,7 @@
                         </Border>
                     </Grid>
 
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                         <Grid Margin="34,0,34,28">
                             <!-- Dashboard -->
                             <Grid x:Name="DashboardView">
@@ -275,7 +278,7 @@
 
                             <!-- Settings -->
                             <Grid x:Name="SettingsView" Visibility="Collapsed">
-                                <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                                <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
                                 <Border Style="{StaticResource Card}">
                                     <StackPanel>
                                         <TextBlock Text="AJUSTES DE DETECCIÓN" Style="{StaticResource Eyebrow}" />
@@ -332,33 +335,48 @@
                                         <DockPanel Margin="0,5,0,0"><TextBlock Text="Más rápido" Style="{StaticResource Subtle}" FontSize="10"/><TextBlock x:Name="SpamIntervalValue" Text="50 ms" DockPanel.Dock="Right" Foreground="{StaticResource AccentBrush}" FontWeight="SemiBold" FontSize="11"/></DockPanel>
                                     </StackPanel>
                                 </Border>
-                                <Grid Grid.Row="3" Margin="0,16,0,0">
-                                    <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="16"/><ColumnDefinition/></Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Style="{StaticResource Card}">
-                                        <StackPanel>
-                                            <TextBlock Text="BOTONES DE ACCIÓN" Style="{StaticResource Eyebrow}" />
-                                            <TextBlock Text="Configura los nombres de tecla o botón." Style="{StaticResource Subtle}" Margin="0,6,0,12" />
-                                            <Grid Margin="0,0,0,7"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="110"/></Grid.ColumnDefinitions><TextBlock Text="Color" VerticalAlignment="Center"/><TextBox x:Name="ColorHotkeyTextBox" Grid.Column="1" Text="F6" Padding="7,4" /></Grid>
-                                            <Grid Margin="0,0,0,7"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="110"/></Grid.ColumnDefinitions><TextBlock Text="Spam" VerticalAlignment="Center"/><TextBox x:Name="SpamHotkeyTextBox" Grid.Column="1" Text="R" Padding="7,4" /></Grid>
-                                            <Grid Margin="0,0,0,7"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="110"/></Grid.ColumnDefinitions><TextBlock Text="Macro cámara" VerticalAlignment="Center"/><TextBox x:Name="CameraMacroHotkeyTextBox" Grid.Column="1" Text="XButton1" Padding="7,4" /></Grid>
-                                            <Grid Margin="0,0,0,10"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="110"/></Grid.ColumnDefinitions><TextBlock Text="Sensibilidad" VerticalAlignment="Center"/><TextBox x:Name="CameraMacroSensitivityTextBox" Grid.Column="1" Text="1" Padding="7,4" /></Grid>
-                                            <TextBlock Text="Admite F5–F12, letras, Space, Enter, Tab, XButton1 y XButton2." Style="{StaticResource Subtle}" FontSize="10" TextWrapping="Wrap" />
-                                            <Button Content="APLICAR BOTONES" Click="ApplyHotkeys_Click" Margin="0,12,0,0" Padding="10,7" />
-                                        </StackPanel>
-                                    </Border>
-                                    <Border Grid.Column="2" Style="{StaticResource Card}">
+                            </Grid>
+
+                            <!-- Camera macro -->
+                            <Grid x:Name="MacroView" Visibility="Collapsed">
+                                <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                                <Border Style="{StaticResource AccentCard}">
+                                    <StackPanel>
+                                        <TextBlock Text="CURVA MACRO" Style="{StaticResource Eyebrow}" />
+                                        <TextBlock Text="Giro de cámara de una sola pulsación" FontSize="22" FontWeight="SemiBold" Margin="0,7,0,5" />
+                                        <TextBlock Text="Mueve la cámara 180° y vuelve a la posición original. El eje X se calcula con 1.080 / sensibilidad." Style="{StaticResource Subtle}" TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </Border>
+                                <Border Grid.Row="1" Margin="0,16,0,0" Style="{StaticResource Card}">
+                                    <StackPanel>
+                                        <TextBlock Text="CONFIGURACIÓN" Style="{StaticResource Eyebrow}" />
+                                        <TextBlock Text="Podés cambiar los botones y la sensibilidad sin tocar el resto del detector." Style="{StaticResource Subtle}" Margin="0,6,0,18" TextWrapping="Wrap" />
                                         <Grid>
-                                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                                            <Border Width="38" Height="38" CornerRadius="12" Background="{StaticResource AccentDimBrush}">
-                                                <TextBlock Text="i" Foreground="{StaticResource AccentBrush}" FontSize="17" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                            </Border>
-                                            <StackPanel Grid.Column="1" Margin="13,0,0,0" VerticalAlignment="Center">
-                                                <TextBlock Text="MACRO DE CÁMARA" Style="{StaticResource Eyebrow}" />
-                                                <TextBlock Text="Mueve la cámara 180° y vuelve a la posición original una sola vez por pulsación. El desplazamiento se calcula como 1.080 / sensibilidad." Style="{StaticResource Subtle}" Margin="0,4,0,0" TextWrapping="Wrap" />
+                                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="18"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                            <StackPanel>
+                                                <TextBlock Text="Botón de color" Style="{StaticResource FieldLabel}" />
+                                                <TextBox x:Name="ColorHotkeyTextBox" Text="F6" Padding="8,6" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="Botón de spam" Style="{StaticResource FieldLabel}" />
+                                                <TextBox x:Name="SpamHotkeyTextBox" Text="R" Padding="8,6" />
                                             </StackPanel>
                                         </Grid>
-                                    </Border>
-                                </Grid>
+                                        <Grid Margin="0,16,0,0">
+                                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="18"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                            <StackPanel>
+                                                <TextBlock Text="Botón de curva macro" Style="{StaticResource FieldLabel}" />
+                                                <TextBox x:Name="CameraMacroHotkeyTextBox" Text="XButton1" Padding="8,6" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="Sensibilidad" Style="{StaticResource FieldLabel}" />
+                                                <TextBox x:Name="CameraMacroSensitivityTextBox" Text="1" Padding="8,6" />
+                                            </StackPanel>
+                                        </Grid>
+                                        <TextBlock Text="Admite F5–F12, letras, Space, Enter, Tab, XButton1 y XButton2." Style="{StaticResource Subtle}" FontSize="10" Margin="0,15,0,0" TextWrapping="Wrap" />
+                                        <Button Content="APLICAR CONFIGURACIÓN" Click="ApplyHotkeys_Click" Margin="0,15,0,0" Padding="10,8" HorizontalAlignment="Left" />
+                                    </StackPanel>
+                                </Border>
                             </Grid>
 
                             <!-- Speed test -->

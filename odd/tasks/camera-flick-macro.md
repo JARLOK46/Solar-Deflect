@@ -16,3 +16,4 @@ Implement the new one-shot camera macro and configurable action buttons.
 
 ## Log
 - L1: "1- Quiero que sea una nueva funcion\n2- Quiero que tambien se puedan configurar el boton de spam y el boton de color, y el boton.\n3- debe ser como lo dijimos en el @Instructions.txt\n4- Una sola vez"
+- L2: "El pogama tiene un desbodamiento de los elementos a la deecha, en ajustes y ayuda, tambien quieo que la Cuve macro este en otro apartado del dashboard en el sidebar y se configure desde ahi"
