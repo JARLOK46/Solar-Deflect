@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Input;
+using System.Globalization;
 using TriggerBot.App.ViewModels;
 using TriggerBot.Core.Detection;
 using TriggerBot.Core.SpeedTesting;
@@ -60,7 +61,8 @@ public partial class MainWindow : Window
         try
         {
             _hotkeys.Attach(this);
-            _viewModel.SetStatus("Listo · F5 activar · F6 color · F7 posición");
+            _hotkeys.Configure(_viewModel.Settings);
+            _viewModel.SetStatus($"Listo · F5 activar · {_viewModel.Settings.ColorHotkey} color · {_viewModel.Settings.CameraMacroHotkey} macro");
         }
         catch (HotkeyRegistrationException exception)
         {
@@ -96,6 +98,9 @@ public partial class MainWindow : Window
             case TriggerHotkey.Spam:
                 StartSpamClicks();
                 break;
+            case TriggerHotkey.CameraMacro:
+                RunCameraMacro();
+                break;
         }
     }
 
@@ -118,6 +123,10 @@ public partial class MainWindow : Window
             : "Punto fijo: no definido";
         PositionLockCheckBox.IsChecked = _viewModel.PositionLockEnabled;
         SpamEnabledCheckBox.IsChecked = _viewModel.SpamEnabled;
+        ColorHotkeyTextBox.Text = _viewModel.Settings.ColorHotkey;
+        SpamHotkeyTextBox.Text = _viewModel.Settings.SpamHotkey;
+        CameraMacroHotkeyTextBox.Text = _viewModel.Settings.CameraMacroHotkey;
+        CameraMacroSensitivityTextBox.Text = _viewModel.Settings.CameraMacroSensitivity.ToString("0.###", CultureInfo.InvariantCulture);
         _initializingSettings = false;
     }
 
@@ -171,6 +180,38 @@ public partial class MainWindow : Window
         catch (Exception exception) when (exception is InvalidOperationException or ArgumentOutOfRangeException)
         {
             _viewModel.SetStatus(exception.Message);
+            InitializeSettingsDisplay();
+        }
+    }
+
+    private void ApplyHotkeys_Click(object sender, RoutedEventArgs e)
+    {
+        if (_initializingSettings) return;
+
+        if (!double.TryParse(CameraMacroSensitivityTextBox.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out var sensitivity))
+        {
+            _viewModel.SetStatus("La sensibilidad de la macro debe ser un número mayor que cero.");
+            return;
+        }
+
+        var settings = _viewModel.Settings with
+        {
+            ColorHotkey = ColorHotkeyTextBox.Text.Trim(),
+            SpamHotkey = SpamHotkeyTextBox.Text.Trim(),
+            CameraMacroHotkey = CameraMacroHotkeyTextBox.Text.Trim(),
+            CameraMacroSensitivity = sensitivity
+        };
+
+        try
+        {
+            settings.Validate();
+            _hotkeys.Configure(settings);
+            _viewModel.UpdateSettings(settings);
+            _viewModel.SetStatus($"Botones actualizados · color {settings.ColorHotkey} · spam {settings.SpamHotkey} · macro {settings.CameraMacroHotkey}");
+        }
+        catch (Exception exception) when (exception is InvalidOperationException or ArgumentException or HotkeyRegistrationException)
+        {
+            _viewModel.SetStatus($"No se pudieron aplicar los botones: {exception.Message}");
             InitializeSettingsDisplay();
         }
     }
@@ -355,6 +396,25 @@ public partial class MainWindow : Window
     }
 
     private void StopDetection() => _detectionCancellation?.Cancel();
+
+    private void RunCameraMacro()
+    {
+        var pixels = (int)Math.Round(1080d / _viewModel.Settings.CameraMacroSensitivity);
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                _detectionRuntime.MoveRelative(pixels, 0);
+                await Task.Delay(15).ConfigureAwait(false);
+                _detectionRuntime.MoveRelative(-pixels, 0);
+                await Dispatcher.InvokeAsync(() => _viewModel.SetStatus($"Macro de cámara ejecutada · {pixels}px"));
+            }
+            catch (Exception exception)
+            {
+                await Dispatcher.InvokeAsync(() => _viewModel.SetStatus($"Error en macro de cámara: {exception.Message}"));
+            }
+        });
+    }
 
     private void StartSpamClicks()
     {

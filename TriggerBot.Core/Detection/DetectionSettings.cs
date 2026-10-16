@@ -13,6 +13,10 @@ public sealed record DetectionSettings
     public bool SpamEnabled { get; init; } = true;
     public ScreenPoint? LockedPosition { get; init; }
     public bool PositionLockEnabled { get; init; }
+    public string ColorHotkey { get; init; } = "F6";
+    public string SpamHotkey { get; init; } = "R";
+    public string CameraMacroHotkey { get; init; } = "XButton1";
+    public double CameraMacroSensitivity { get; init; } = 1.0;
 
     public void Validate()
     {
@@ -28,5 +32,19 @@ public sealed record DetectionSettings
             throw new ArgumentOutOfRangeException(nameof(SpamClickInterval), "Spam click interval must be between 0.01 and 1 second.");
         if (PositionLockEnabled && LockedPosition is null)
             throw new InvalidOperationException("Position lock requires a fixed position.");
+        ValidateHotkey(ColorHotkey, nameof(ColorHotkey));
+        ValidateHotkey(SpamHotkey, nameof(SpamHotkey));
+        ValidateHotkey(CameraMacroHotkey, nameof(CameraMacroHotkey));
+        if (double.IsNaN(CameraMacroSensitivity) || double.IsInfinity(CameraMacroSensitivity)
+            || CameraMacroSensitivity <= 0)
+            throw new ArgumentOutOfRangeException(nameof(CameraMacroSensitivity), "Camera macro sensitivity must be greater than zero.");
+    }
+
+    private static void ValidateHotkey(string value, string parameterName)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            throw new ArgumentException("Hotkey cannot be empty.", parameterName);
+        if (!HotkeyVirtualKey.TryParse(value, out _))
+            throw new ArgumentException($"Unsupported hotkey '{value}'.", parameterName);
     }
 }

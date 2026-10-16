@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
+using TriggerBot.Core.Detection;
 
 namespace TriggerBot.Windows.Input;
 
@@ -9,7 +10,8 @@ public enum TriggerHotkey
     Toggle = 1,
     SelectColor = 2,
     FixPosition = 3,
-    Spam = 4
+    Spam = 4,
+    CameraMacro = 5
 }
 
 public sealed class GlobalHotkeyService : IDisposable
@@ -17,9 +19,7 @@ public sealed class GlobalHotkeyService : IDisposable
     private const int WmHotkey = 0x0312;
     private const uint ModNoRepeat = 0x4000;
     private const uint VkF5 = 0x74;
-    private const uint VkF6 = 0x75;
     private const uint VkF7 = 0x76;
-    private const uint VkR = 0x52;
     private readonly Dictionary<int, TriggerHotkey> _registered = new();
     private HwndSource? _source;
     private IntPtr _windowHandle;
@@ -38,10 +38,27 @@ public sealed class GlobalHotkeyService : IDisposable
 
         try
         {
-            Register(1, TriggerHotkey.Toggle, VkF5);
-            Register(2, TriggerHotkey.SelectColor, VkF6);
-            Register(3, TriggerHotkey.FixPosition, VkF7);
-            Register(4, TriggerHotkey.Spam, VkR);
+            RegisterBindings(new DetectionSettings());
+        }
+        catch
+        {
+            Detach();
+            throw;
+        }
+    }
+
+    public void Configure(DetectionSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+        settings.Validate();
+        if (_source is null) throw new InvalidOperationException("Hotkey service is not attached.");
+
+        foreach (var id in _registered.Keys.ToArray())
+            NativeMethods.UnregisterHotKey(_windowHandle, id);
+        _registered.Clear();
+        try
+        {
+            RegisterBindings(settings);
         }
         catch
         {
@@ -64,6 +81,20 @@ public sealed class GlobalHotkeyService : IDisposable
     }
 
     public void Dispose() => Detach();
+
+    private void RegisterBindings(DetectionSettings settings)
+    {
+        if (!HotkeyVirtualKey.TryParse(settings.ColorHotkey, out var color)
+            || !HotkeyVirtualKey.TryParse(settings.SpamHotkey, out var spam)
+            || !HotkeyVirtualKey.TryParse(settings.CameraMacroHotkey, out var macro))
+            throw new HotkeyRegistrationException("One or more configured hotkeys are unsupported.");
+
+        Register(1, TriggerHotkey.Toggle, VkF5);
+        Register(2, TriggerHotkey.SelectColor, color);
+        Register(3, TriggerHotkey.FixPosition, VkF7);
+        Register(4, TriggerHotkey.Spam, spam);
+        Register(5, TriggerHotkey.CameraMacro, macro);
+    }
 
     private void Register(int id, TriggerHotkey hotkey, uint virtualKey)
     {

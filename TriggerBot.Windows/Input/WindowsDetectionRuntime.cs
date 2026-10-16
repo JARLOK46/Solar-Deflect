@@ -24,6 +24,20 @@ public sealed class WindowsDetectionRuntime : IDetectionRuntime
 
     public RgbColor ReadPixel(ScreenPoint point) => _pixelReader.Read(point);
 
+    public void MoveRelative(int x, int y)
+    {
+        Send(new NativeMethods.Input
+        {
+            Type = NativeMethods.InputMouse,
+            Mouse = new NativeMethods.MouseInput
+            {
+                X = x,
+                Y = y,
+                Flags = NativeMethods.MouseEventMove
+            }
+        });
+    }
+
     public void LeftClick()
     {
         var input = new NativeMethods.Input
@@ -49,6 +63,7 @@ public sealed class WindowsDetectionRuntime : IDetectionRuntime
     private static class NativeMethods
     {
         public const uint InputMouse = 0;
+        public const uint MouseEventMove = 0x0001;
         public const uint MouseEventLeftDown = 0x0002;
         public const uint MouseEventLeftUp = 0x0004;
 
