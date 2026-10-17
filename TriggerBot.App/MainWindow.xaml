@@ -278,7 +278,7 @@
 
                             <!-- Settings -->
                             <Grid x:Name="SettingsView" Visibility="Collapsed">
-                                <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                                <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
                                 <Border Style="{StaticResource Card}">
                                     <StackPanel>
                                         <TextBlock Text="AJUSTES DE DETECCIÓN" Style="{StaticResource Eyebrow}" />
@@ -335,6 +335,25 @@
                                         <DockPanel Margin="0,5,0,0"><TextBlock Text="Más rápido" Style="{StaticResource Subtle}" FontSize="10"/><TextBlock x:Name="SpamIntervalValue" Text="50 ms" DockPanel.Dock="Right" Foreground="{StaticResource AccentBrush}" FontWeight="SemiBold" FontSize="11"/></DockPanel>
                                     </StackPanel>
                                 </Border>
+                                <Border Grid.Row="3" Margin="0,16,0,0" Style="{StaticResource Card}">
+                                    <StackPanel>
+                                        <TextBlock Text="BOTONES DE ACCIÓN" Style="{StaticResource Eyebrow}" />
+                                        <TextBlock Text="Configurá aquí los botones de color y spam." Style="{StaticResource Subtle}" Margin="0,6,0,12" />
+                                        <Grid>
+                                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="18"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                            <StackPanel>
+                                                <TextBlock Text="Botón de color" Style="{StaticResource FieldLabel}" />
+                                                <TextBox x:Name="ColorHotkeyTextBox" Text="F6" Padding="8,6" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="Botón de spam" Style="{StaticResource FieldLabel}" />
+                                                <TextBox x:Name="SpamHotkeyTextBox" Text="R" Padding="8,6" />
+                                            </StackPanel>
+                                        </Grid>
+                                        <TextBlock Text="Admite F5–F12, letras, Space, Enter, Tab, XButton1 y XButton2." Style="{StaticResource Subtle}" FontSize="10" Margin="0,12,0,0" TextWrapping="Wrap" />
+                                        <Button Content="APLICAR BOTONES" Click="ApplyHotkeys_Click" Margin="0,12,0,0" Padding="10,8" HorizontalAlignment="Left" />
+                                    </StackPanel>
+                                </Border>
                             </Grid>
 
                             <!-- Camera macro -->
@@ -352,17 +371,6 @@
                                         <TextBlock Text="CONFIGURACIÓN" Style="{StaticResource Eyebrow}" />
                                         <TextBlock Text="Podés cambiar los botones y la sensibilidad sin tocar el resto del detector." Style="{StaticResource Subtle}" Margin="0,6,0,18" TextWrapping="Wrap" />
                                         <Grid>
-                                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="18"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                                            <StackPanel>
-                                                <TextBlock Text="Botón de color" Style="{StaticResource FieldLabel}" />
-                                                <TextBox x:Name="ColorHotkeyTextBox" Text="F6" Padding="8,6" />
-                                            </StackPanel>
-                                            <StackPanel Grid.Column="2">
-                                                <TextBlock Text="Botón de spam" Style="{StaticResource FieldLabel}" />
-                                                <TextBox x:Name="SpamHotkeyTextBox" Text="R" Padding="8,6" />
-                                            </StackPanel>
-                                        </Grid>
-                                        <Grid Margin="0,16,0,0">
                                             <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="18"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                                             <StackPanel>
                                                 <TextBlock Text="Botón de curva macro" Style="{StaticResource FieldLabel}" />
